@@ -18,7 +18,34 @@ repositories {
     mavenCentral()
 }
 
+/**
+ * reference : https://github.com/kadtewsd/java11QueryDSL/blob/master/build.gradle
+ */
+
+def queryDslDir = './out/production/classes/generated'
+def queryDslOutput = file("${queryDslDir}")
+sourceSets {
+    main {
+        java {
+            srcDir queryDslDir
+        }
+    }
+}
+
+def queryDSLVersion = "4.2.1"
 dependencies {
+    compile "com.querydsl:querydsl-jpa:${queryDSLVersion}"
+    compile "com.querydsl:querydsl-core:${queryDSLVersion}"
+    compile "com.querydsl:querydsl-sql:${queryDSLVersion}"
+
+    annotationProcessor(
+            "com.querydsl:querydsl-apt:${queryDSLVersion}"
+    )
+
+}
+
+dependencies {
+
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -36,9 +63,27 @@ dependencies {
      * - https://mvnrepository.com/artifact/com.querydsl/querydsl-sql
      *
      */
-    compile 'com.querydsl:querydsl-jpa:4.2.1'
-    compile 'com.querydsl:querydsl-apt:4.2.1'
-    compile 'com.querydsl:querydsl-core:4.2.1'
-    compile 'com.querydsl:querydsl-sql:4.2.1'
+    compile "com.querydsl:querydsl-jpa:4.2.1"
+    compile "com.querydsl:querydsl-apt:4.2.1"
+    compile "com.querydsl:querydsl-core:4.2.1"
+    compile "com.querydsl:querydsl-sql:4.2.1"
 
+}
+
+def gradleGenerateDir = "./build/generated/sources/apt"
+def gradleQueryDslOutput = file("${gradleGenerateDir}")
+
+task cleanUpQueryDsl(type: Copy) {
+    from "${gradleGenerateDir}/main"
+    into "${queryDslDir}"
+    doLast {
+        delete gradleQueryDslOutput
+    }
+}
+
+compileJava.finalizedBy(cleanUpQueryDsl)
+
+clean {
+    delete gradleQueryDslOutput
+    delete queryDslOutput
 }

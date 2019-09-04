@@ -1,6 +1,6 @@
-package edu.pasudo123.querydsl.app.member;
+package edu.pasudo123.querydsl.app.member.model;
 
-import edu.pasudo123.querydsl.app.team.Team;
+import edu.pasudo123.querydsl.app.team.model.Team;
 import lombok.*;
 
 import java.io.Serializable;

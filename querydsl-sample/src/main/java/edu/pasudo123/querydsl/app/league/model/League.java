@@ -1,4 +1,4 @@
-package edu.pasudo123.querydsl.app.league;
+package edu.pasudo123.querydsl.app.league.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
