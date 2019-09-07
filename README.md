@@ -1,5 +1,9 @@
 # Querydsl Sample (2019 -)
 
+## index
+- [querydsl 을 이용하기 위한 build.gradle 세팅](https://github.com/pasudo123/pasudo123-querydsl-sample/blob/master/01.%20querydsl-gradle-setting.md)
+- [repository 구조 잡기](#)
+
 ## reference
 - [querydsl 공식 repo](https://github.com/querydsl/querydsl)
 - [querydsl plugin reop](https://github.com/ewerk/gradle-plugins/tree/master/querydsl-plugin)
