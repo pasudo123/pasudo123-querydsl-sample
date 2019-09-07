@@ -144,5 +144,5 @@ gradle-app.setting
 
 # End of https://www.gitignore.io/api/gradle
 
-# querydsl 생성
+# querydsl 로 생성된 제너레이트 파일 제외
 generated

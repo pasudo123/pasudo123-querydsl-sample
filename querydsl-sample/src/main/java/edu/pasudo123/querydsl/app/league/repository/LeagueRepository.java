@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Blog: https://pasudo123.tistory.com/
  * Email: oraedoa@gmail.com
  **/
-public interface LeagueRepository extends JpaRepository<League, String> {
+public interface LeagueRepository extends JpaRepository<League, String>, LeagueCustomRepository{
 }

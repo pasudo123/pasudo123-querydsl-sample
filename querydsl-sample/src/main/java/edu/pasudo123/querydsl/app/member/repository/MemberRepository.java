@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Blog: https://pasudo123.tistory.com/
  * Email: oraedoa@gmail.com
  **/
-public interface MemberRepository extends JpaRepository<Member, MemberPk> {
+public interface MemberRepository extends JpaRepository<Member, MemberPk>, MemberCustomRepository {
 }

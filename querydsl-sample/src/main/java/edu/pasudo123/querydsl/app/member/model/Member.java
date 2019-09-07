@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Created by pasudo123 on 2019-09-04
@@ -35,6 +36,10 @@ public class Member {
     private Team team;
 
     @Id
+    @Column(name = "member_uid", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String memberUid;
+
+    @Id
     @Column(name = "member_name", columnDefinition = "VARCHAR(50)", nullable = false)
     private String name;
 
@@ -42,10 +47,12 @@ public class Member {
     @Column(name = "member_desc", columnDefinition = "VARCHAR(200)", nullable = true)
     private String description;
 
+
     @Builder
-    public Member(String name, Team team, String description) {
-        this.name = name;
+    public Member(Team team, String name, String description) {
         this.team = team;
+        this.memberUid = UUID.randomUUID().toString().replace("-", "");
+        this.name = name;
         this.description = description;
     }
 

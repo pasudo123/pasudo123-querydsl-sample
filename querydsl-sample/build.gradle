@@ -1,12 +1,30 @@
+
+buildscript {
+    ext {
+        querydslPluginVersion = '1.0.10'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" } // plugin 저장소
+    }
+    dependencies {
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}")
+
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.1.7.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
 }
 
+
 group = 'edu.pasudo123.querydsl'
-version = '1.0.'
+version = '1.0.0'
 sourceCompatibility = '1.8'
+
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 configurations {
     compileOnly {
@@ -18,34 +36,14 @@ repositories {
     mavenCentral()
 }
 
-/**
- * reference : https://github.com/kadtewsd/java11QueryDSL/blob/master/build.gradle
- */
-
-def queryDslDir = './out/production/classes/generated'
-def queryDslOutput = file("${queryDslDir}")
-sourceSets {
-    main {
-        java {
-            srcDir queryDslDir
-        }
-    }
-}
-
-def queryDSLVersion = "4.2.1"
-dependencies {
-    compile "com.querydsl:querydsl-jpa:${queryDSLVersion}"
-    compile "com.querydsl:querydsl-core:${queryDSLVersion}"
-    compile "com.querydsl:querydsl-sql:${queryDSLVersion}"
-
-    annotationProcessor(
-            "com.querydsl:querydsl-apt:${queryDSLVersion}"
-    )
-
+ext{
+    queryDslVersion = "4.1.3"
 }
 
 dependencies {
-
+    
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
@@ -63,27 +61,32 @@ dependencies {
      * - https://mvnrepository.com/artifact/com.querydsl/querydsl-sql
      *
      */
-    compile "com.querydsl:querydsl-jpa:4.2.1"
-    compile "com.querydsl:querydsl-apt:4.2.1"
-    compile "com.querydsl:querydsl-core:4.2.1"
-    compile "com.querydsl:querydsl-sql:4.2.1"
-
+    compile "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    compile "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
-def gradleGenerateDir = "./build/generated/sources/apt"
-def gradleQueryDslOutput = file("${gradleGenerateDir}")
+/** querydsl 적용하는 부분 **/
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
+def queryDslSrcDir = 'src/main/generated'
 
-task cleanUpQueryDsl(type: Copy) {
-    from "${gradleGenerateDir}/main"
-    into "${queryDslDir}"
-    doLast {
-        delete gradleQueryDslOutput
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = queryDslSrcDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', queryDslSrcDir]
+        }
     }
 }
 
-compileJava.finalizedBy(cleanUpQueryDsl)
+compileQuerydsl{
+    options.annotationProcessorPath = configurations.querydsl
+}
 
-clean {
-    delete gradleQueryDslOutput
-    delete queryDslOutput
+configurations {
+    querydsl.extendsFrom compileClasspath
 }
