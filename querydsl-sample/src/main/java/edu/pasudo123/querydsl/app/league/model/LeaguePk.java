@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class LeaguePk implements Serializable {
 
-    private Long id;
+    private String leagueUid;
 
     private String name;
 

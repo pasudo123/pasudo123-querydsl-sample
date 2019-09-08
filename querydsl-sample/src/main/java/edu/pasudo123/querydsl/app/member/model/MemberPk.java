@@ -1,6 +1,5 @@
 package edu.pasudo123.querydsl.app.member.model;
 
-import edu.pasudo123.querydsl.app.team.model.TeamPk;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,8 +14,6 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class MemberPk implements Serializable {
-
-    private TeamPk team;
 
     private String memberUid;
 

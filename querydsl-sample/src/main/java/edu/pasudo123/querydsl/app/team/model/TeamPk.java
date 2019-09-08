@@ -1,6 +1,5 @@
 package edu.pasudo123.querydsl.app.team.model;
 
-import edu.pasudo123.querydsl.app.league.model.LeaguePk;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,9 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TeamPk implements Serializable {
 
-    private LeaguePk league;
-
-    private Long id;
+    private String teamUid;
 
     private String name;
 

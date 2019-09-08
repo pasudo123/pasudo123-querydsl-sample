@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Created by pasudo123 on 2019-09-04
@@ -21,7 +22,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "team",
         indexes = {
-                @Index(name = "fk_team_league_idx", columnList = "league_name")
+                @Index(name = "team_name_idx", unique = true, columnList = "team_name"),
+                @Index(name = "fk_team_league_idx", columnList = "league_id, league_name")
         })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(TeamPk.class)
@@ -29,19 +31,8 @@ import java.time.LocalDateTime;
 public class Team {
 
     @Id
-    @ManyToOne(
-            targetEntity = League.class,
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({
-        @JoinColumn(name = "league_id", columnDefinition = "INT", referencedColumnName = "id"),
-        @JoinColumn(name = "league_name", columnDefinition = "VARCHAR(50)", referencedColumnName = "league_name")
-    })
-    private League league;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String teamUid;
 
     @Id
     @Column(name = "team_name", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -49,6 +40,18 @@ public class Team {
 
     @Column(name = "team_desc", columnDefinition = "VARCHAR(200)", nullable = true)
     private String description;
+
+    @ManyToOne(
+            targetEntity = League.class,
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumns(
+            value = {
+                    @JoinColumn(name = "league_id", columnDefinition = "VARCHAR(50)", referencedColumnName = "id"),
+                    @JoinColumn(name = "league_name", columnDefinition = "VARCHAR(50)", referencedColumnName = "league_name")
+            },
+            foreignKey = @ForeignKey(name = "fk_team_to_league"))
+    private League league;
 
     @CreatedDate
     @Column(name = "reg_date", columnDefinition = "DATETIME", nullable = false, updatable = false)
@@ -60,6 +63,7 @@ public class Team {
 
     @Builder
     public Team(String name, League league, String description) {
+        this.teamUid = UUID.randomUUID().toString().replace("-", "");
         this.name = name;
         this.league = league;
         this.description = description;

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Created by pasudo123 on 2019-09-04
@@ -14,13 +15,17 @@ import javax.persistence.*;
  **/
 @Getter
 @Entity
-@Table(name = "league")
+@Table(name = "league",
+        indexes = {
+                @Index(name = "league_name_idx", unique = true, columnList = "league_name")
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@IdClass(LeaguePk.class)
 public class League {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id", columnDefinition = "VARCHAR(50)", nullable = false)
+    private String leagueUid;
 
     @Id
     @Column(name = "league_name", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -30,7 +35,8 @@ public class League {
     private String desc;
 
     @Builder
-    public League(String name, String desc){
+    public League(String name, String desc) {
+        this.leagueUid = UUID.randomUUID().toString().replace("-", "");
         this.name = name;
         this.desc = desc;
     }
