@@ -1,5 +1,6 @@
 package edu.pasudo123.querydsl.app.member.model;
 
+import edu.pasudo123.querydsl.app.locker.model.Locker;
 import edu.pasudo123.querydsl.app.team.model.Team;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,8 +17,7 @@ import java.util.UUID;
  **/
 @Getter
 @Entity
-@Table(name = "member",
-        indexes = {@Index(name = "fk_member_team_idx", columnList = "team_id, team_name")})
+@Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(MemberPk.class)
 public class Member {
@@ -29,6 +29,10 @@ public class Member {
     @Id
     @Column(name = "member_name", columnDefinition = "VARCHAR(50)", nullable = false)
     private String name;
+
+    @OneToOne
+    @JoinColumn(name = "locker_id", foreignKey = @ForeignKey(name = "fk_member_to_locker"))
+    private Locker locker;
 
     @ManyToOne(
             targetEntity = Team.class,

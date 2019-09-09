@@ -20,11 +20,7 @@ import java.util.UUID;
  **/
 @Getter
 @Entity
-@Table(name = "team",
-        indexes = {
-                @Index(name = "team_name_idx", unique = true, columnList = "team_name"),
-                @Index(name = "fk_team_league_idx", columnList = "league_id, league_name")
-        })
+@Table(name = "team", indexes = {@Index(name = "team_name_idx", unique = true, columnList = "team_name")})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(TeamPk.class)
 @EntityListeners(AuditingEntityListener.class)
