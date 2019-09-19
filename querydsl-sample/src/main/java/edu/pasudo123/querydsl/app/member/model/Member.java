@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @Table(name = "member")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @IdClass(MemberPk.class)
-public class Member {
+public class Member /**implements Persistable<MemberPk>**/ {
 
     @Id
     @Column(name = "member_uid", columnDefinition = "VARCHAR(50)", nullable = false)
@@ -37,7 +38,8 @@ public class Member {
     @ManyToOne(
             targetEntity = Team.class,
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+            cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH}
+    )
     @JoinColumns(
             value = {
                     @JoinColumn(name = "team_id", columnDefinition = "VARCHAR(50)", referencedColumnName = "id"),
@@ -61,4 +63,14 @@ public class Member {
     public void changeDescription(String description) {
         this.description = description;
     }
+
+//    @Override
+//    public MemberPk getId() {
+//        return new MemberPk(memberUid, name);
+//    }
+//
+//    @Override
+//    public boolean isNew() {
+//        return true;
+//    }
 }
